@@ -2,7 +2,6 @@ import os
 import csv
 
 def save_data(filename, labels):
-
     for label in labels:
         folder_path = '../data/{}'.format(label)
         images = os.listdir(folder_path)
