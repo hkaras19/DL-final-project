@@ -6,7 +6,7 @@ from pynput import mouse
 # mappings from action name to corresponding key
 
 class Game():
-    def __init__(self):
+    def __init__(self, model):
 
         self.action_dict = {
             "turn left" : 'a',
@@ -17,7 +17,51 @@ class Game():
             "lean right" : 'right'
         }
 
-        self.clicks = 0
+        self.model = model
+        self.game_running = False
+
+    def play(self):
+
+        # locate the game on the screen for taking screenshots
+        game_start_screen = '../images/start_screen.png'
+        game_region = pyautogui.locateOnScreen(game_start_screen)
+
+        if game_region == None:
+            print("Error getting game region...")
+            return
+
+        # locate and click play (maybe die to start to avoid different starts)
+        play_game_image = '../images/play_game_button.png'
+        play_game_region = pyautogui.locateOnScreen(play_game_image)
+
+        if play_game_region == None:
+            print("Error getting play game button region...")
+            return
+
+        pyautogui.click(play_game_region)
+
+        # delay to start running
+        time.sleep(5)
+
+        while self.game_running:
+            # take screenshot
+            screenshot = pyautogui.screenshot(game_region)
+
+            # check for end game button
+            # maybe do this in parallel?
+            
+            end_game_image = '../images/end_run_button'
+            end_game_region = pyautogui.locateOnScreen(end_game_image)
+
+            if end_game_region != None:
+                self.game_running = False
+
+            # feed screenshot into model
+            action = self.model(screenshot)
+                
+            # feed output into perform_action
+            self.perform_action(action)
+            
 
     def perform_action(self, action, duration=0):
         """
@@ -45,28 +89,18 @@ class Game():
         while time.time() - start < duration: # hold the key for the duration
             pyautogui.press(key_to_press)
 
+def click_button(button_image):
+    button_region = pyautogui.locateOnScreen(button_image)
+    print(button_region)
+    pyautogui.click(button_region)
 
-
-    def on_click(self, x, y, button, pressed):
-        if pressed:
-            print(x, y)
-            self.clicks += 1
-
-        if self.clicks == 4:
-            return False
-
-    def get_game_bounds(self):
-        with mouse.Listener(on_click=self.on_click) as listener:
-            try:
-                listener.join()
-            except:
-                return
 
 def main():
-    # time.sleep(5) # delay to get set up
+    time.sleep(5) # delay to get set up
     # perform_action("turn left", 5)
 
-    get_game_bounds()
+    end_game_image = '../images/end_run_button'
+    click_button('brown logo.png')
     
 
 if __name__ == '__main__':
