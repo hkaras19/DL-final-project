@@ -47,6 +47,8 @@ def train(self, image_shape, epochs, train_data, train_labels):
     
 def main():
     # Get the data
+    batch_size = ?
+    image_shape = [384, 720, 3]
     
     # PREPROCESS.PY
     
@@ -56,8 +58,12 @@ def main():
     self = Model(batch_size, num_classes)
     
     # train the model
+    print("\nStarting Training...")
     model = train(self, image_shape, epochs, train_data, train_labels)
     
+    # See the test results
+    # test_loss, test_accuracy = model.evaluate(test_images, test_labels, verbose=2, batch_size=batch_size)
+
     return model
 
 
