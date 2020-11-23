@@ -69,7 +69,7 @@ def insta_predict(self, test_img, labels):
     # Get the labels from the predictions
     labels = []
     for i in preds:
-        labels.append(self.label_names(tf.math.argmax(i))
+        labels.append(self.label_names(tf.math.argmax(i)))
                       
     return labels
     
