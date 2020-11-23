@@ -54,17 +54,19 @@ def train(self, image_shape, epochs, train_data, train_labels):
 # Predict the output of a single image (or a bunch) in a stream
 def insta_predict(self, test_img, labels):
     # For larger batches
-    #self.model.predict(test_img);
+    #preds = self.model.predict(test_img);
     
     # Make sure the test_img is 4-D
     try:
         x = test_img.shape[3]
+        x = test_img
     except:
         x = tf.expand_dims(test_img, axis=0);
     
     # For a single batch
     preds = self.model(x, training=False);
     
+    # Get the labels from the predictions
     labels = []
     for i in preds:
         labels.append(self.label_names(tf.math.argmax(i))
@@ -88,12 +90,12 @@ def main():
     model = train(self, image_shape, epochs, train_data, train_labels)
     
     # Call insta_predict -> returns a 1-D list of the labels of the images put in
-    # insta_predict(self, test_img)
+    # labels = insta_predict(self, test_img)
     
     # See the test results
     # test_loss, test_accuracy = model.evaluate(test_images, test_labels, verbose=2, batch_size=batch_size)
 
-    return model
+    return labels
 
 
 if __name__ == '__main__':
