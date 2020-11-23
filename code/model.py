@@ -43,7 +43,7 @@ def train(self, image_shape, epochs, train_data, train_labels):
     self.create_model(image_shape).compile(optimizer=tf.keras.optimizers.Adam(lr=base_learning_rate), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
                    
     # And train it
-    return self.model.fit(train_data, epochs = epochs);
+    return self.model.fit(train_data, train_labels, epochs = epochs);
     
 def main():
     # Get the data
