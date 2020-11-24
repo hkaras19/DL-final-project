@@ -90,17 +90,23 @@ class Game():
             pyautogui.press(key_to_press)
 
 def click_button(button_image):
-    button_region = pyautogui.locateOnScreen(button_image)
-    print(button_region)
-    pyautogui.click(button_region)
+    x, y = pyautogui.locateCenterOnScreen(button_image)
+    x, y = x // 2, y // 2
+    pyautogui.click((x,y ), clicks=2)
+    pyautogui.moveTo(x, y)
 
+def comp_on_screen(image):
+    region = pyautogui.locateCenterOnScreen(image)
+    
+    if region == None:
+        return False
+    
+    return True
 
 def main():
-    time.sleep(5) # delay to get set up
-    # perform_action("turn left", 5)
-
-    end_game_image = '../images/end_run_button'
-    click_button('brown logo.png')
+    end_game_image = '../data/buttons/end_run.png'
+    # click_button(end_game_image)
+    print(comp_on_screen(end_game_image))
     
 
 if __name__ == '__main__':
