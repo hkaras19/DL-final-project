@@ -12,6 +12,8 @@ class Model(tf.keras.Model):
         This model will be used to classify temple run images into the action that should 
         be taken at this point in the game.
         """
+
+        print("Setting up model...")
         
         # hyperparamters
 
@@ -42,16 +44,20 @@ class Model(tf.keras.Model):
         Return: the action to take
         """
 
+        print("Getting prediction...")
         img_array = tf.keras.preprocessing.image.img_to_array(img) # convert image to array
         img_array = tf.expand_dims(img_array, 0) # create a batch
 
         predictions = self.model.predict(img_array)
         score = tf.nn.softmax(predictions[0]) # get logits
+        action = self.class_names[np.argmax(score)]
 
-        print(
-            "This image most likely belongs to {} with a {:.2f} percent confidence."
-            .format(self.class_names[np.argmax(score)], 100 * np.max(score))
-        )
+        # print(
+        #     "This image most likely belongs to {} with a {:.2f} percent confidence."
+        #     .format(self.class_names[np.argmax(score)], 100 * np.max(score))
+        # )
+
+        return action
 
     def train(self, epochs, train_data, train_labels):
         """

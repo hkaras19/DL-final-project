@@ -1,63 +1,70 @@
 import pyautogui
 import time
-
-from pynput import mouse
-
+from model import Model
 # mappings from action name to corresponding key
 
 class Game():
-    def __init__(self, model):
+    def __init__(self):
+
+        print("Welcome to TempleFlow!")
 
         self.action_dict = {
             "turn left" : 'a',
             "turn right" : 'd',
-            "jump" : 'w',
+            "jmp" : 'w',
             "duck" : 's',
             "lean left" : 'left',
             "lean right" : 'right'
         }
 
-        self.model = model
-        self.game_running = False
+        self.model = Model(False)
+        self.game_running = True
+        self.delay = 0.05
 
     def play(self):
-
+        print("Getting game region...")
         # locate the game on the screen for taking screenshots
-        game_start_screen = '../images/start_screen.png'
-        game_region = pyautogui.locateOnScreen(game_start_screen)
+        game_start_screen = '../data/screens/start_screen.png'
+        game_region = pyautogui.locateOnScreen(game_start_screen, confidence=0.95)
 
         if game_region == None:
             print("Error getting game region...")
             return
 
-        # locate and click play (maybe die to start to avoid different starts)
-        play_game_image = '../images/play_game_button.png'
-        play_game_region = pyautogui.locateOnScreen(play_game_image)
+        print("Starting game...")
 
-        if play_game_region == None:
-            print("Error getting play game button region...")
+        # locate and click play (maybe die to start to avoid different starts)
+        start_button = '../data/buttons/start_button.png'
+
+        if self.comp_on_screen(start_button):
+            self.click_button(start_button)
+        else:
+            print("Error getting start button...")
             return
 
-        pyautogui.click(play_game_region)
-
         # delay to start running
-        time.sleep(5)
+        print("Waiting...")
+        time.sleep(8)
+        print("Ready to play!")
 
         while self.game_running:
             # take screenshot
-            screenshot = pyautogui.screenshot(game_region)
+
+            screenshot = pyautogui.screenshot(region=game_region)
 
             # check for end game button
             # maybe do this in parallel?
             
-            end_game_image = '../images/end_run_button'
-            end_game_region = pyautogui.locateOnScreen(end_game_image)
+            end_game_image = '../data/buttons/end_run.png'
 
-            if end_game_region != None:
+            if self.comp_on_screen(end_game_image):
+                print("Done playing!")
                 self.game_running = False
 
+            # time.sleep(self.delay)
+            
             # feed screenshot into model
-            action = self.model(screenshot)
+            action = self.model.get_prediction(screenshot)
                 
             # feed output into perform_action
             self.perform_action(action)
@@ -89,25 +96,26 @@ class Game():
         while time.time() - start < duration: # hold the key for the duration
             pyautogui.press(key_to_press)
 
-def click_button(button_image):
-    x, y = pyautogui.locateCenterOnScreen(button_image)
-    x, y = x // 2, y // 2
-    pyautogui.click((x,y ), clicks=2)
-    pyautogui.moveTo(x, y)
+    def click_button(self, button_image):
+        x, y = pyautogui.locateCenterOnScreen(button_image, confidence=0.75)
+        x, y = x // 2, y // 2
 
-def comp_on_screen(image):
-    region = pyautogui.locateCenterOnScreen(image)
-    
-    if region == None:
-        return False
-    
-    return True
+        clicks = 1
+        if button_image == '../data/buttons/start_button.png':
+            clicks = 2
 
-def main():
-    end_game_image = '../data/buttons/end_run.png'
-    # click_button(end_game_image)
-    print(comp_on_screen(end_game_image))
-    
+        pyautogui.click((x,y ), clicks=clicks)
+        pyautogui.moveTo(x, y)
+
+    def comp_on_screen(self, image):
+        region = pyautogui.locateCenterOnScreen(image, confidence=0.75)
+        
+        if region == None:
+            return False
+        
+        return True
+
 
 if __name__ == '__main__':
-    main()
+    game = Game()
+    game.play()    
