@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow.keras.applications.resnet50 import ResNet50
 import matplotlib as plt
 import numpy as np
+from tensorflow.keras.preprocessing import image
 
 class Model(tf.keras.Model):
     def __init__(self, is_new):
@@ -104,11 +105,16 @@ def visualize_results(history, epochs):
 
 
 if __name__ == '__main__':
-    is_new = True
+    is_new = False
     model = Model(is_new)
-    train_data, train_labels = get_data(model.img_height, model.img_width, model.batch_size)
-    # get_prediction()
-    if(is_new):
+    
+    if is_new:
+        train_data, train_labels = get_data(model.img_height, model.img_width, model.batch_size)
         model.train(10, train_data, train_labels)
+    
+    filename = '../data/train/jmp/j00000.png'
+    img = image.load_img(filename, target_size=(model.img_height, model.img_width))
+    model.get_prediction(img)
+    
     
     
