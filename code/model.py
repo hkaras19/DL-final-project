@@ -1,6 +1,6 @@
 from preprocess import get_data
 import tensorflow as tf
-from keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.resnet50 import ResNet50
 import matplotlib as plt
 import numpy as np
 
@@ -14,7 +14,7 @@ class Model(tf.keras.Model):
         
         # hyperparamters
 
-        self.batch_size = 128
+        self.batch_size = 20
         self.num_classes = 6
         self.img_height = 720
         self.img_width = 384
@@ -27,13 +27,14 @@ class Model(tf.keras.Model):
             self.normalize = tf.keras.layers.experimental.preprocessing.Rescaling(1./255, input_shape=self.image_shape) # normalizing layer
             self.base_model = ResNet50(input_shape=self.image_shape, include_top=False, weights='imagenet') # resnet50
             self.base_model.trainable = False # freeze the base layer
-            self.pool_layer = tf.keras.layers.MaxPooling2D() # adding pooling and dense layers
+            self.pool_layer = tf.keras.layers.GlobalAveragePooling2D()
             self.out_layer = tf.keras.layers.Dense(self.num_classes, activation='relu')
             self.model = tf.keras.Sequential([self.base_model, self.pool_layer, self.out_layer]) # final model
+
         else:
             self.model = tf.keras.models.load_model('resnet50_model') # load the model from saved version
 
-    def get_prediction(self, img):
+    def get_prediction(self, img, label=None):
         """
         Purpose: predict an action given a game screenshot
         Args: img is the screenshot to be examined
@@ -51,7 +52,7 @@ class Model(tf.keras.Model):
             .format(self.class_names[np.argmax(score)], 100 * np.max(score))
         )
 
-    def train(self, epochs, train_ds):
+    def train(self, epochs, train_data, train_labels):
         """
         Purpose: train the network to recognize actions based on images
         Args: number of epochs to train for, keras training dataset object
@@ -59,17 +60,23 @@ class Model(tf.keras.Model):
         """
 
         print("Training...")
-        self.model.compile(optimizer='adam', loss='categorical_crossentropy',metrics=['accuracy']) # set up optimizer and loss
+        
+        self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy']) # set up optimizer and loss
+
+        print(self.model.summary())
 
         # train the model
         history = self.model.fit(
-            train_ds,
+            train_data,
+            train_labels,
+            batch_size = self.batch_size,
+            verbose=2,
             epochs=epochs)
         
         self.model.save('resnet50_model') # save the model weights
         print('Saved model to disk')
 
-        self.visualize_results(history, epochs) # look at results
+        visualize_results(history, epochs) # look at results
 
 def visualize_results(history, epochs):
     """
@@ -97,6 +104,11 @@ def visualize_results(history, epochs):
 
 
 if __name__ == '__main__':
-    model = Model(is_new=True)
-    train_ds = get_data(model.img_height, model.img_width, model.batch_size)
-    model.train(1, train_ds)
+    is_new = True
+    model = Model(is_new)
+    train_data, train_labels = get_data(model.img_height, model.img_width, model.batch_size)
+    # get_prediction()
+    if(is_new):
+        model.train(10, train_data, train_labels)
+    
+    
