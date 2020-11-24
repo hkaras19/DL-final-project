@@ -28,7 +28,7 @@ class Model(tf.keras.Model):
             self.base_model = ResNet50(input_shape=self.image_shape, include_top=False, weights='imagenet') # resnet50
             self.base_model.trainable = False # freeze the base layer
             self.pool_layer = tf.keras.layers.MaxPooling2D() # adding pooling and dense layers
-            self.out_layer = tf.keras.layers.Dense(self.num_classes, activation='leaky_relu')
+            self.out_layer = tf.keras.layers.Dense(self.num_classes, activation='relu')
             self.model = tf.keras.Sequential([self.base_model, self.pool_layer, self.out_layer]) # final model
         else:
             self.model = tf.keras.models.load_model('resnet50_model') # load the model from saved version
