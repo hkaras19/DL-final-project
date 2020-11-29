@@ -45,8 +45,9 @@ class Model(tf.keras.Model):
         """
 
         print("Getting prediction...")
-        img_array = tf.keras.preprocessing.image.img_to_array(img) # convert image to array
-        img_array = np.reshape(img_array, self.image_shape)
+        img_array = tf.keras.preprocessing.image.img_to_array(img) # convert image to array (720, 384, 4)
+        #img_array = np.reshape(img_array, self.image_shape)
+        img_array = img_array[:, :, :3]
         img_array = tf.expand_dims(img_array, 0) # create a batch
 
         predictions = self.model.predict(img_array)

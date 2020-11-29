@@ -20,13 +20,13 @@ class Game():
 
         self.model = Model(False)
         self.game_running = True
-        self.delay = 0.05
+        self.delay = 0.01
 
     def play(self):
         print("Getting game region...")
         # locate the game on the screen for taking screenshots
         game_start_screen = '../data/screens/start_screen.png'
-        game_region = pyautogui.locateOnScreen(game_start_screen, confidence=0.95)
+        game_region = pyautogui.locateOnScreen(game_start_screen, confidence=0.80)
 
         if game_region == None:
             print("Error getting game region...")
@@ -45,7 +45,7 @@ class Game():
 
         # delay to start running
         print("Waiting...")
-        time.sleep(8)
+        time.sleep(2)
         print("Ready to play!")
 
         while self.game_running:
@@ -54,7 +54,7 @@ class Game():
             screenshot = pyautogui.screenshot(region=game_region)
             screenshot = screenshot.resize((self.model.img_width, self.model.img_height))
 
-            # check for end game button
+            # check for end game buttonwwww
             # maybe do this in parallel?
             
             end_game_image = '../data/buttons/end_run.png'
