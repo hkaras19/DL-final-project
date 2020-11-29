@@ -46,16 +46,17 @@ class Model(tf.keras.Model):
 
         print("Getting prediction...")
         img_array = tf.keras.preprocessing.image.img_to_array(img) # convert image to array
+        img_array = np.reshape(img_array, self.image_shape)
         img_array = tf.expand_dims(img_array, 0) # create a batch
 
         predictions = self.model.predict(img_array)
         score = tf.nn.softmax(predictions[0]) # get logits
         action = self.class_names[np.argmax(score)]
 
-        # print(
-        #     "This image most likely belongs to {} with a {:.2f} percent confidence."
-        #     .format(self.class_names[np.argmax(score)], 100 * np.max(score))
-        # )
+        print(
+            "This image most likely belongs to {} with a {:.2f} percent confidence."
+            .format(self.class_names[np.argmax(score)], 100 * np.max(score))
+        )
 
         return action
 
@@ -118,7 +119,8 @@ if __name__ == '__main__':
         train_data, train_labels = get_data(model.img_height, model.img_width, model.batch_size)
         model.train(10, train_data, train_labels)
     
-    filename = '../data/train/jmp/j00000.png'
+    # filename = '../data/train/jmp/j00000.png'
+    filename = './test3.png'
     img = image.load_img(filename, target_size=(model.img_height, model.img_width))
     model.get_prediction(img)
     

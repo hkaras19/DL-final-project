@@ -1,6 +1,7 @@
 import pyautogui
 import time
 from model import Model
+from PIL import Image
 # mappings from action name to corresponding key
 
 class Game():
@@ -51,6 +52,7 @@ class Game():
             # take screenshot
 
             screenshot = pyautogui.screenshot(region=game_region)
+            screenshot = screenshot.resize((self.model.img_width, self.model.img_height))
 
             # check for end game button
             # maybe do this in parallel?
