@@ -10,12 +10,12 @@ class Game():
         print("Welcome to TempleFlow!")
 
         self.action_dict = {
-            "turn left" : 'a',
-            "turn right" : 'd',
+            "turn_left" : 'a',
+            "turn_right" : 'd',
             "jmp" : 'w',
-            "duck" : 's',
-            "lean left" : 'left',
-            "lean right" : 'right'
+            "slide" : 's',
+            "lean_left" : 'left',
+            "lean_right" : 'right'
         }
 
         self.model = Model(False)
