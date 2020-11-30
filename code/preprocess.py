@@ -39,42 +39,15 @@ def get_data(img_height, img_width, batch_size):
     
     # I think this is inefficient: for loops to fill train with dataset of size 100 for testing purposes
     # But...I've tried stuff like above and its much faster than all of that
-    i = 0;
+    i = 0
     train = np.zeros((1363, 720, 384, 3))
+    labels = np.zeros((1363))
+    
     for item in dataset:
         train[i] = item[0]
-        i += 1
-#        if i == 500:
-#            break;
-
-    labels = np.zeros((1363))
-    i = 0;
-    for item in dataset:
         labels[i] = item[1]
         i += 1
-#        if i == 500:
-#            break;
 
-    i = 0
-    
     labels = tf.one_hot(labels, 6)
-
-#    print(real_ds)
-#    #print(real_ds.shape)
-#
-#    for ex in real_ds:
-#        print(ex)
-#        print(ex[0].shape)
-#        break
-##
-#    tf.data.Datasets.as_numpy(
-#        dataset: Tree[TensorflowElem]
-#    ) -> Tree[NumpyElem]
-
-    # optimizing for disk
-  #  AUTOTUNE = tf.data.experimental.AUTOTUNE
-  #  train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-
-    # repeat for testing set
     
     return train, labels
