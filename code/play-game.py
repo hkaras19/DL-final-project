@@ -51,10 +51,9 @@ class Game():
         while self.game_running:
             # take screenshot
 
-            screenshot = pyautogui.screenshot(region=game_region)
-            screenshot = screenshot.resize((self.model.img_width, self.model.img_height))
+            screenshot = pyautogui.screenshot(region=game_region).resize((self.model.img_width, self.model.img_height))
 
-            # check for end game buttonwwww
+            # check for end game button
             # maybe do this in parallel?
             
             end_game_image = '../data/buttons/end_run.png'
