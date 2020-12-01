@@ -21,6 +21,7 @@ class Game():
         self.model = Model(False)
         self.game_running = True
         self.delay = 0.01
+        self.play()
 
     def play(self):
         print("Getting game region...")
@@ -119,4 +120,3 @@ class Game():
 
 if __name__ == '__main__':
     game = Game()
-    game.play()    
