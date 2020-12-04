@@ -1,4 +1,5 @@
-from preprocess import get_data
+# from code.big_data import BigDataTrainer
+from big_data import BigDataTrainer
 import tensorflow as tf
 #from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
@@ -66,26 +67,29 @@ class Model(tf.keras.Model):
 
         return action
 
-    def train(self, epochs, train_data, train_labels):
+    def train(self, train_ds, val_ds, epochs):
         """
         Purpose: train the network to recognize actions based on images
         Args: number of epochs to train for, keras training dataset object
         Return: nothing
         """
 
-        print("Training...")
+        print("Starting to train...")
         
-        self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy']) # set up optimizer and loss
+        self.model.compile(
+            optimizer='adam', 
+            loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
+            metrics=['accuracy']) # set up optimizer and loss
 
         print(self.model.summary())
 
         # train the model
         history = self.model.fit(
-            train_data,
-            train_labels,
-            batch_size = self.batch_size,
-            verbose=2,
-            epochs=epochs)
+            train_ds,
+            validation_data=val_ds,
+            epochs=epochs,
+            verbose=2
+        )
         
         self.model.save('templeflow_model_enet') # save the model weights
         print('Saved model to disk')
@@ -114,21 +118,16 @@ def visualize_results(history, epochs):
     plt.plot(epochs_range, loss, label='Training Loss')
     plt.legend(loc='upper right')
     plt.title('Training Loss')
-    plt.show()
-
-
+    plt.show()    
+    
 if __name__ == '__main__':
     is_new = True
     model = Model(is_new)
     
     if is_new:
-        train_data, train_labels = get_data(model.img_height, model.img_width, model.batch_size)
-        model.train(10, train_data, train_labels)
+        BigDataObj = BigDataTrainer(model)
+        BigDataObj.train()
     
-    # filename = '../data/train/jmp/j00000.png'
     filename = './test3.png'
     img = image.load_img(filename, target_size=(model.img_height, model.img_width))
     model.get_prediction(img)
-    
-    
-    
