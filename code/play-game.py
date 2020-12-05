@@ -45,8 +45,8 @@ class Game():
             return
 
         # delay to start running
-        print("Waiting...")
-        time.sleep(2)
+        #Print("Waiting...")
+        #time.sleep(0)
         print("Ready to play!")
 
         while self.game_running:
