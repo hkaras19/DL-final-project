@@ -6,6 +6,7 @@ from tensorflow.keras.applications.efficientnet import EfficientNetB0
 import matplotlib as plt
 import numpy as np
 from tensorflow.keras.preprocessing import image
+import os
 #from tensorflow.keras.preprocessing import image
 
 class Model(tf.keras.Model):
@@ -41,29 +42,29 @@ class Model(tf.keras.Model):
             print(self.model.summary())
 
         else:
-            self.model = tf.keras.models.load_model('./drive/MyDrive/NEW_TEMPLEFLOW_PICS/mini_model/enet_model') # load the model from saved version
+            self.model = tf.keras.models.load_model('../templeflow_model_enet') # load the model from saved version
             print(self.model.summary())
 
-    def get_prediction(self, img, label=None):
+    def call(self, img, label=None):
         """
         Purpose: predict an action given a game screenshot
         Args: img is the screenshot to be examined
         Return: the action to take
         """
 
-        print("Getting prediction...")
+        print("\nGetting prediction...")
         img_array = tf.keras.preprocessing.image.img_to_array(img)[:,:,:3] # convert image to array (720, 384, 4)
         img_array = tf.expand_dims(img_array, 0) # create a batch
 
         predictions = self.model.predict(img_array)
-        print(predictions)
+        # print(predictions)
 
         score = tf.nn.softmax(predictions[0]) # get logits
-        print(score)
+        # print(score)
         action = self.class_names[np.argmax(score)]
 
         print(
-            "This image most likely belongs to {} with a {:.2f} percent confidence."
+            "This image most likely belongs to {} with a {:.2f} percent confidence.\n"
             .format(action, 100 * np.max(score))
         )
 
@@ -127,9 +128,26 @@ def visualize_results(history, epochs):
 
 
 if __name__ == '__main__':
-    is_new = True
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+    is_new = False
     model = Model(is_new)
     
     if is_new:
         BigDataObj = BigDataTrainer(model)
         BigDataObj.train()
+
+    images = [
+        'jmp/jmp0.jpeg', 
+        'lean_left/lean_left0.jpeg',
+        'lean_right/lean_right0.jpeg',
+        'slide/slide0.jpeg',
+        'turn_left0/turn_left0.jpeg',
+        'turn_right0/turn_right0.jpeg'
+    ]
+
+    # for image in images:  
+    filename = '../data/train/slide/slide0.jpeg'  
+    img = image.load_img(filename, target_size=(model.img_height, model.img_width))
+    model(img)
+
+

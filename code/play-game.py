@@ -1,6 +1,7 @@
 import pyautogui
 import time
 from model import Model
+import datetime
 from PIL import Image
 # mappings from action name to corresponding key
 
@@ -20,7 +21,7 @@ class Game():
 
         self.model = Model(False)
         self.game_running = True
-        self.delay = 0.01
+        self.delay = 10 / 1000
         self.play()
 
     def play(self):
@@ -46,8 +47,13 @@ class Game():
 
         # delay to start running
         #Print("Waiting...")
-        #time.sleep(0)
-        print("Ready to play!")
+        # time.sleep(3.2)
+               
+        time.sleep(6.3)
+        print("Ready to play!") 
+        self.perform_action("jmp")
+        
+        # time.sleep(0.5)
 
         while self.game_running:
             # take screenshot
@@ -66,10 +72,12 @@ class Game():
             # time.sleep(self.delay)
             
             # feed screenshot into model
-            action = self.model.get_prediction(screenshot)
+            action = self.model(screenshot)
                 
             # feed output into perform_action
             self.perform_action(action)
+
+
             
 
     def perform_action(self, action, duration=0):
