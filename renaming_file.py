@@ -4,7 +4,7 @@ import os
 def main():
 
     # folder = "../../../Desktop/TEMPLEFLOW_PICS" #For my personal computer
-    folder = "../data/train" # For the github
+    folder = "./data/train" # For the github
 
     # turn_left
     cur_fold = os.path.join(folder, "turn_left")

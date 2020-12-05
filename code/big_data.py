@@ -9,8 +9,8 @@ class BigDataTrainer:
         self.AUTOTUNE = tf.data.experimental.AUTOTUNE
         self.img_height = model.img_height
         self.img_width = model.img_width
-       # self.data_dir = '../data/train/*/*.jpeg'
-        self.data_dir = '/content/drive/MyDrive/NEW_TEMPLEFLOW_PICS/mini_train/train/*/*.png'
+        self.data_dir = '../data/train/*/*.jpeg'
+       # self.data_dir = '/content/drive/MyDrive/NEW_TEMPLEFLOW_PICS/train/*/*.png'
         self.class_names = model.class_names
         self.model = model
 
@@ -80,12 +80,20 @@ class BigDataTrainer:
         #    print("Label: ", label.numpy())
 
 #        return
+
+        print(tf.data.experimental.cardinality(train_ds).numpy())
+        print(tf.data.experimental.cardinality(val_ds).numpy())
+
         print("Optimizing data...")
         train_ds = self.configure_for_performance(train_ds)
         val_ds = self.configure_for_performance(val_ds)
         
         print(tf.data.experimental.cardinality(train_ds).numpy())
         print(tf.data.experimental.cardinality(val_ds).numpy())
+        self.model.train(train_ds, 3)
        # print(train_ds)
 
-        self.model.train(train_ds, val_ds, 1)
+      #  for i in range(25):
+        #  train_ds = self.configure_for_performance(train_ds)
+        # for train_batch in train_ds:
+        #   model.train(train_batch, 1)

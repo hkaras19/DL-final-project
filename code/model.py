@@ -69,7 +69,7 @@ class Model(tf.keras.Model):
 
         return action
 
-    def train(self, train_ds, val_ds, epochs):
+    def train(self, train_ds, epochs):
         """
         Purpose: train the network to recognize actions based on images
         Args: number of epochs to train for, keras training dataset object
@@ -92,7 +92,6 @@ class Model(tf.keras.Model):
         # train the model
         history = self.model.fit(
             train_ds,
-            validation_data=val_ds,
             epochs=epochs,
             verbose=1
         )
