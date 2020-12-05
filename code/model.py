@@ -8,12 +8,11 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 #from tensorflow.keras.preprocessing import image
 
-
 class Model(tf.keras.Model):
     def __init__(self, is_new):
         super(Model, self).__init__()
         """
-        This model will be used to classify temple run images into the action that should 
+        This model will be used to classify temple run images into the action that should
         be taken at this point in the game.
         """
 
@@ -21,7 +20,7 @@ class Model(tf.keras.Model):
         
         # hyperparamters
 
-        self.batch_size = 200
+        self.batch_size = 20
         self.num_classes = 6
         self.img_height = 720
         self.img_width = 384
@@ -32,15 +31,18 @@ class Model(tf.keras.Model):
 
         if is_new: # check if making a new model or loading old (trained) model
             self.normalize = tf.keras.layers.experimental.preprocessing.Rescaling(1./255, input_shape=self.image_shape) # normalizing layer
+
            # self.base_model = ResNet50(input_shape=self.image_shape, include_top=False, weights='imagenet') # resnet50
             self.base_model = EfficientNetB0(input_shape=self.image_shape, include_top=False, weights='imagenet') # resnet50
             self.base_model.trainable = False # freeze the base layer
             self.pool_layer = tf.keras.layers.GlobalAveragePooling2D()
             self.out_layer = tf.keras.layers.Dense(self.num_classes, activation='relu')
             self.model = tf.keras.Sequential([self.base_model, self.pool_layer, self.out_layer]) # final model
+            print(self.model.summary())
 
         else:
-            self.model = tf.keras.models.load_model('templeflow_model_enet') # load the model from saved version
+            self.model = tf.keras.models.load_model('./drive/MyDrive/NEW_TEMPLEFLOW_PICS/mini_model/enet_model') # load the model from saved version
+            print(self.model.summary())
 
     def get_prediction(self, img, label=None):
         """
@@ -74,27 +76,31 @@ class Model(tf.keras.Model):
         Return: nothing
         """
 
-        print("Starting to train...")
+        print("Training...")
         
         self.model.compile(
-            optimizer='adam', 
+            optimizer='adam',
             loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
             metrics=['accuracy']) # set up optimizer and loss
 
-        print(self.model.summary())
-
+        print(tf.data.experimental.cardinality(train_ds).numpy())
+        # for image, label in train_ds.take(5):
+        #   print("Image shape: ", image.numpy().shape)
+        #   print("Label: ", label.numpy())
+        # return
+        
         # train the model
         history = self.model.fit(
             train_ds,
             validation_data=val_ds,
             epochs=epochs,
-            verbose=2
+            verbose=1
         )
         
-        self.model.save('templeflow_model_enet') # save the model weights
+      #  self.model.save('templeflow_model_enet') # save the model weights
         print('Saved model to disk')
 
-        visualize_results(history, epochs) # look at results
+    #    visualize_results(history, epochs) # look at results
 
 def visualize_results(history, epochs):
     """
@@ -118,8 +124,9 @@ def visualize_results(history, epochs):
     plt.plot(epochs_range, loss, label='Training Loss')
     plt.legend(loc='upper right')
     plt.title('Training Loss')
-    plt.show()    
-    
+    plt.show()
+
+
 if __name__ == '__main__':
     is_new = True
     model = Model(is_new)
@@ -127,7 +134,3 @@ if __name__ == '__main__':
     if is_new:
         BigDataObj = BigDataTrainer(model)
         BigDataObj.train()
-    
-    filename = './test3.png'
-    img = image.load_img(filename, target_size=(model.img_height, model.img_width))
-    model.get_prediction(img)

@@ -9,7 +9,8 @@ class BigDataTrainer:
         self.AUTOTUNE = tf.data.experimental.AUTOTUNE
         self.img_height = model.img_height
         self.img_width = model.img_width
-        self.data_dir = '../data/train/*/*.jpeg'
+       # self.data_dir = '../data/train/*/*.jpeg'
+        self.data_dir = '/content/drive/MyDrive/NEW_TEMPLEFLOW_PICS/mini_train/train/*/*.png'
         self.class_names = model.class_names
         self.model = model
 
@@ -35,7 +36,7 @@ class BigDataTrainer:
         return img, label
 
     def configure_for_performance(self, ds):
-        # ds = ds.cache()
+        ds = ds.cache()
         ds = ds.shuffle(buffer_size=1000)
         ds = ds.batch(self.model.batch_size)
         ds = ds.prefetch(buffer_size=self.AUTOTUNE)
@@ -48,14 +49,21 @@ class BigDataTrainer:
         print("Found {} images...".format(image_count))
         print("Getting data...")
         list_ds = tf.data.Dataset.list_files(str(self.data_dir), shuffle=False)
-        i = 0
-        for x, y in list_ds:
-            print(x, y)
-            i += 1
-            if i == 100:
-                return
-
-
+        
+        i = 0;
+#        for elm in list_ds:
+#            path = tf.get_static_value(elm)
+#            path = path.decode()
+#            parts = path.split("/")
+#            print(parts)
+#            print(parts[-1][-4:])
+#            if(parts[-1][-4:] != "jpeg"):
+#                print ("AHHHH")
+            #if(parts[-1]
+#            if i == 50:
+#                return
+        
+        
         list_ds = list_ds.shuffle(image_count, reshuffle_each_iteration=False)
 
         print("Splitting data...")
@@ -66,11 +74,18 @@ class BigDataTrainer:
         print("Processing data...")
         train_ds = train_ds.map(self.process_path, num_parallel_calls=self.AUTOTUNE)
         val_ds = val_ds.map(self.process_path, num_parallel_calls=self.AUTOTUNE)
+        
+        # for image, label in train_ds:
+        #    print("Image shape: ", image.numpy().shape)
+        #    print("Label: ", label.numpy())
 
+#        return
         print("Optimizing data...")
         train_ds = self.configure_for_performance(train_ds)
         val_ds = self.configure_for_performance(val_ds)
-
-        self.model.train(train_ds, val_ds, 3)
-
         
+        print(tf.data.experimental.cardinality(train_ds).numpy())
+        print(tf.data.experimental.cardinality(val_ds).numpy())
+       # print(train_ds)
+
+        self.model.train(train_ds, val_ds, 1)
