@@ -42,7 +42,7 @@ class Model(tf.keras.Model):
             print(self.model.summary())
 
         else:
-            self.model = tf.keras.models.load_model('../templeflow_model_enet') # load the model from saved version
+            self.model = tf.keras.models.load_model('../templeflow_model_2') # load the model from saved version
             print(self.model.summary())
 
     def call(self, img, label=None):
