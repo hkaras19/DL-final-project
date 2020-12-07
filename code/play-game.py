@@ -3,6 +3,8 @@ import time
 from model import Model
 import datetime
 from PIL import Image
+from pynput.keyboard import Listener, Key
+import keyboard
 # mappings from action name to corresponding key
 
 class Game():
@@ -49,33 +51,34 @@ class Game():
         #Print("Waiting...")
         # time.sleep(3.2)
                
-        time.sleep(6.3)
-        print("Ready to play!") 
+        # time.sleep(6)
+        print("Ready to play!")
         self.perform_action("jmp")
         
-        # time.sleep(0.5)
+        # time.sleep(2.7)
 
         while self.game_running:
             # take screenshot
+            if ready_to_predict():
 
-            screenshot = pyautogui.screenshot(region=game_region).resize((self.model.img_width, self.model.img_height))
+                screenshot = pyautogui.screenshot(region=game_region).resize((self.model.img_width, self.model.img_height))
 
-            # check for end game button
-            # maybe do this in parallel?
-            
-            end_game_image = '../data/buttons/end_run.png'
-
-            if self.comp_on_screen(end_game_image):
-                print("Done playing!")
-                self.game_running = False
-
-            # time.sleep(self.delay)
-            
-            # feed screenshot into model
-            action = self.model(screenshot)
+                # check for end game button
+                # maybe do this in parallel?
                 
-            # feed output into perform_action
-            self.perform_action(action)
+                end_game_image = '../data/buttons/end_run.png'
+
+                if self.comp_on_screen(end_game_image):
+                    print("Done playing!")
+                    self.game_running = False
+
+                # time.sleep(self.delay)
+                
+                # feed screenshot into model
+                action = self.model(screenshot)
+                    
+                # feed output into perform_action
+                self.perform_action(action)
 
 
             
@@ -125,6 +128,22 @@ class Game():
         
         return True
 
+def ready_to_predict():
+    try:  # used try so that if user pressed other than the given key error will not be shown
+        if keyboard.is_pressed('p'):  # if key 'q' is pressed 
+            return True
+    except:
+        return False
+
+    return False
 
 if __name__ == '__main__':
+    # with Listener(on_press=on_press) as listener:
+    #     listener.daemon = True
+    #     listener.start()
+
     game = Game()
+
+        
+    
+    
