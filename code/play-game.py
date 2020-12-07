@@ -30,7 +30,7 @@ class Game():
         print("Getting game region...")
         # locate the game on the screen for taking screenshots
         game_start_screen = '../data/screens/start_screen.png'
-        game_region = pyautogui.locateOnScreen(game_start_screen, confidence=0.80)
+        game_region = pyautogui.locateOnScreen(game_start_screen, confidence=0.70)
 
         if game_region == None:
             print("Error getting game region...")
@@ -51,15 +51,19 @@ class Game():
         #Print("Waiting...")
         # time.sleep(3.2)
                
-        # time.sleep(6)
+    #    time.sleep(2)
         print("Ready to play!")
-        self.perform_action("jmp")
+       # self.perform_action("jmp")
         
         # time.sleep(2.7)
 
         while self.game_running:
+            #ax`time.sleep(0.5);a
             # take screenshot
+            t = time.time()
             screenshot = pyautogui.screenshot(region=game_region).resize((self.model.img_width, self.model.img_height))
+            t1 = time.time() - t
+            print(t1)
 
          #   if ready_to_predict():
                 # check for end game button
@@ -71,10 +75,13 @@ class Game():
 #                    print("Done playing!")
 #                    self.game_running = False
 
-            # time.sleep(self.delay)
-            print("Input detected")
+           # time.sleep(self.delay)
+         #   print("Input detected")
             # feed screenshot into model
+            t = time.time()
             action = self.model(screenshot)
+            t1 = time.time() - t
+            print(t1)
             # feed output into perform_action
             self.perform_action(action)
 

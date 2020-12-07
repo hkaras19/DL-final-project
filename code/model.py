@@ -23,8 +23,8 @@ class Model(tf.keras.Model):
 
         self.batch_size = 20
         self.num_classes = 6
-        self.img_height = 360
-        self.img_width = 192
+        self.img_height = 180
+        self.img_width = 96
         self.image_shape = (self.img_height, self.img_width, 3)
         self.class_names = ['jmp', 'lean_left', 'lean_right', 'slide', 'turn_left', 'turn_right']
 
@@ -42,8 +42,21 @@ class Model(tf.keras.Model):
             print(self.model.summary())
 
         else:
-            self.model = tf.keras.models.load_model('../tflow_model3') # load the model from saved version
+            self.model = tf.keras.models.load_model('../tflow_model4') # load the model from saved version
             print(self.model.summary())
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def call(self, img, label=None):
         """
