@@ -59,29 +59,24 @@ class Game():
 
         while self.game_running:
             # take screenshot
-            if ready_to_predict():
+            screenshot = pyautogui.screenshot(region=game_region).resize((self.model.img_width, self.model.img_height))
 
-                screenshot = pyautogui.screenshot(region=game_region).resize((self.model.img_width, self.model.img_height))
-
+         #   if ready_to_predict():
                 # check for end game button
                 # maybe do this in parallel?
-                
-                end_game_image = '../data/buttons/end_run.png'
+#
+#                end_game_image = '../data/buttons/end_run.png'
+#
+#                if self.comp_on_screen(end_game_image):
+#                    print("Done playing!")
+#                    self.game_running = False
 
-                if self.comp_on_screen(end_game_image):
-                    print("Done playing!")
-                    self.game_running = False
-
-                # time.sleep(self.delay)
-                
-                # feed screenshot into model
-                action = self.model(screenshot)
-                    
-                # feed output into perform_action
-                self.perform_action(action)
-
-
-            
+            # time.sleep(self.delay)
+            print("Input detected")
+            # feed screenshot into model
+            action = self.model(screenshot)
+            # feed output into perform_action
+            self.perform_action(action)
 
     def perform_action(self, action, duration=0):
         """

@@ -23,8 +23,8 @@ class Model(tf.keras.Model):
 
         self.batch_size = 20
         self.num_classes = 6
-        self.img_height = 720
-        self.img_width = 384
+        self.img_height = 360
+        self.img_width = 192
         self.image_shape = (self.img_height, self.img_width, 3)
         self.class_names = ['jmp', 'lean_left', 'lean_right', 'slide', 'turn_left', 'turn_right']
 
@@ -42,7 +42,7 @@ class Model(tf.keras.Model):
             print(self.model.summary())
 
         else:
-            self.model = tf.keras.models.load_model('../templeflow_model_2') # load the model from saved version
+            self.model = tf.keras.models.load_model('../tflow_model3') # load the model from saved version
             print(self.model.summary())
 
     def call(self, img, label=None):
@@ -85,10 +85,6 @@ class Model(tf.keras.Model):
             metrics=['accuracy']) # set up optimizer and loss
 
         print(tf.data.experimental.cardinality(train_ds).numpy())
-        # for image, label in train_ds.take(5):
-        #   print("Image shape: ", image.numpy().shape)
-        #   print("Label: ", label.numpy())
-        # return
         
         # train the model
         history = self.model.fit(
