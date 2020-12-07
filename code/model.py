@@ -42,7 +42,7 @@ class Model(tf.keras.Model):
             print(self.model.summary())
 
         else:
-            self.model = tf.keras.models.load_model('../tflow_model4') # load the model from saved version
+            self.model = tf.keras.models.load_model('../tflow_model5') # load the model from saved version
             print(self.model.summary())
 
 

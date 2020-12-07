@@ -51,12 +51,10 @@ class Game():
         #Print("Waiting...")
         # time.sleep(3.2)
                
-    #    time.sleep(2)
+        time.sleep(2)
         print("Ready to play!")
        # self.perform_action("jmp")
         
-        # time.sleep(2.7)
-
         while self.game_running:
             #ax`time.sleep(0.5);a
             # take screenshot
