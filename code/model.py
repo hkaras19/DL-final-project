@@ -39,11 +39,7 @@ class Model(tf.keras.Model):
             print(self.model.summary())
 
         else:
-<<<<<<< HEAD
-            self.model = tf.keras.models.load_model('..models//tflow_model4') # load the model from saved version
-=======
-            self.model = tf.keras.models.load_model('../tflow_model5') # load the model from saved version
->>>>>>> 1777c3069e7c01e606837004f547a22affd6ed62
+            self.model = tf.keras.models.load_model('..models/tflow_model5') # load the model from saved version
             print(self.model.summary())
 
     def call(self, img, label=None):
@@ -92,7 +88,7 @@ class Model(tf.keras.Model):
             verbose=1
         )
         
-        self.model.save('../models/tflow_model4') # save the model weights
+        self.model.save('../models/tflow_model5') # save the model weights
         print('Saved model to disk')
 
         # visualize_results(history, epochs) # look at results
