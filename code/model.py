@@ -39,7 +39,11 @@ class Model(tf.keras.Model):
             print(self.model.summary())
 
         else:
+<<<<<<< HEAD
             self.model = tf.keras.models.load_model('..models//tflow_model4') # load the model from saved version
+=======
+            self.model = tf.keras.models.load_model('../tflow_model5') # load the model from saved version
+>>>>>>> 1777c3069e7c01e606837004f547a22affd6ed62
             print(self.model.summary())
 
     def call(self, img, label=None):

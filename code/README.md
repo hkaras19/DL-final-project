@@ -1,6 +1,9 @@
 # TempleFlow: Deep Learning Final Project
 ### Hunter Karas and Arun Kavishwar
 
+## Final Writeup
+https://docs.google.com/document/d/1LjoRqpEnWkFB6FJvjET3JLb6bRu2LMrfPzNkp3gJuiE/edit#
+
 ## Project Description
 For the final project of csci1470 (Deep Learning), our team chose option two from the assignment handout and attempted to solve a new problem using deep learning. More specifically, we decided to create a deep learning program which learns how to play a “never-before-attempted” game. 
 
