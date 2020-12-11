@@ -9,10 +9,15 @@ import keyboard
 
 class Game():
     def __init__(self):
+        """
+        Handles the interaction with the game. Sets up and starts the game,
+        gets realtime screenshots, feeds the image into the model, performs the
+        action.
+        """
 
         print("Welcome to TempleFlow!")
 
-        self.action_dict = {
+        self.action_dict = { # used to convert predictions to keystrokes
             "turn_left" : 'a',
             "turn_right" : 'd',
             "jmp" : 'w',
@@ -21,13 +26,17 @@ class Game():
             "lean_right" : 'right'
         }
 
-        self.model = Model(False)
+        self.model = Model(False) # setup model and play
         self.game_running = True
-        self.delay = 10 / 1000
         self.play()
 
     def play(self):
+        """
+        Performs the information described in init
+        """
+
         print("Getting game region...")
+
         # locate the game on the screen for taking screenshots
         game_start_screen = '../data/screens/start_screen.png'
         game_region = pyautogui.locateOnScreen(game_start_screen, confidence=0.70)
@@ -38,7 +47,7 @@ class Game():
 
         print("Starting game...")
 
-        # locate and click play (maybe die to start to avoid different starts)
+        # locate and click play
         start_button = '../data/buttons/start_button.png'
 
         if self.comp_on_screen(start_button):
@@ -47,42 +56,13 @@ class Game():
             print("Error getting start button...")
             return
 
-        # delay to start running
-        #Print("Waiting...")
-        # time.sleep(3.2)
-               
-    #    time.sleep(2)
         print("Ready to play!")
-       # self.perform_action("jmp")
-        
-        # time.sleep(2.7)
 
+        # take screenshots and get predictions
         while self.game_running:
-            #ax`time.sleep(0.5);a
-            # take screenshot
-            t = time.time()
             screenshot = pyautogui.screenshot(region=game_region).resize((self.model.img_width, self.model.img_height))
-            t1 = time.time() - t
-            print(t1)
-
-         #   if ready_to_predict():
-                # check for end game button
-                # maybe do this in parallel?
-#
-#                end_game_image = '../data/buttons/end_run.png'
-#
-#                if self.comp_on_screen(end_game_image):
-#                    print("Done playing!")
-#                    self.game_running = False
-
-           # time.sleep(self.delay)
-         #   print("Input detected")
-            # feed screenshot into model
-            t = time.time()
             action = self.model(screenshot)
-            t1 = time.time() - t
-            print(t1)
-            # feed output into perform_action
+
             self.perform_action(action)
 
     def perform_action(self, action, duration=0):
@@ -112,17 +92,28 @@ class Game():
             pyautogui.press(key_to_press)
 
     def click_button(self, button_image):
-        x, y = pyautogui.locateCenterOnScreen(button_image, confidence=0.75)
-        x, y = x // 2, y // 2
+        """
+        Purpose: click the given button
+        Args: an of the button to click
+        Return: none
+        """
+        x, y = pyautogui.locateCenterOnScreen(button_image, confidence=0.75) # get location of button
+        x, y = x // 2, y // 2 # bug fix for mac
 
         clicks = 1
-        if button_image == '../data/buttons/start_button.png':
+        if button_image == '../data/buttons/start_button.png': # make sure to select BlueStacks and then start
             clicks = 2
 
         pyautogui.click((x,y ), clicks=clicks)
         pyautogui.moveTo(x, y)
 
     def comp_on_screen(self, image):
+        """
+        Purpose: checks if the given image is on the screen
+        Args: the item to look for
+        Returns: True for on screen false otherwise
+        """
+
         region = pyautogui.locateCenterOnScreen(image, confidence=0.75)
         
         if region == None:
@@ -130,22 +121,5 @@ class Game():
         
         return True
 
-def ready_to_predict():
-    try:  # used try so that if user pressed other than the given key error will not be shown
-        if keyboard.is_pressed('p'):  # if key 'q' is pressed 
-            return True
-    except:
-        return False
-
-    return False
-
 if __name__ == '__main__':
-    # with Listener(on_press=on_press) as listener:
-    #     listener.daemon = True
-    #     listener.start()
-
-    game = Game()
-
-        
-    
-    
+    game = Game() # create and run a game
