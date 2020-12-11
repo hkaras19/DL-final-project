@@ -14,13 +14,13 @@ We trained our model by collecting and labeling around 13,000 images (over multi
 At this final deadline, we can declare success on our target goal (see reflection). While we did not reach our stretch goal, of the AI player being able to navigate the game indefinitely, we were able to satisfy two of our other goals: our base goal and target goal. We will now describe the details of our project.
 
 ## How To Use
-1. Download BlueStacks and install Temple Run 2 onto the emulator
+1. Download BlueStacks and install Temple Run 2 onto the emulator.
 
-2. Open a terminal window and place it next to the temple run game
+2. Open a terminal window and place it next to the temple run game.
 
-Note: make sure you can see the whole game screen and that you start on the home screen (take the idol)
-Note: you will need to install a few dependencies to run the project (do some pip installs and googling as the errors arise)
+Note: make sure you can see the whole game screen and that you start on the home screen (take the idol).
+Note: you will need to install a few dependencies to run the project (do some pip installs and googling as the errors arise).
 
 3. Run python3 play-game.py
 
-4. Stop the predictions by stopping your terminal process
+4. Stop the predictions by stopping your terminal process.
